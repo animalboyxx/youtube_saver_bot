@@ -10,11 +10,8 @@ dp = Dispatcher(bot)
 
 @dp.message_handler()
 async def get_url(message: types.Message):
-    await bot.send_sticker(chat_id=message.chat.id,
-                           sticker='CAACAgQAAxkBAAEKJWVk7ExZWiHvnJkiCkR96QGIM0e1KwACQwgAArdkcVPkfM0BRtGhHzAE')
-    # file = open('One Rode to Asa Bay.mp3', 'rb')
-    # await bot.send_video(message.chat.id, file)
-    get_audio(message.text)
+    file = open(get_audio(message.text), 'rb')
+    await bot.send_video(message.chat.id, file)
 
 
 def get_audio(url):
@@ -26,6 +23,7 @@ def get_audio(url):
         new_file = base + '.mp3'
         os.rename(out_file, new_file)
         print('success')
+        return(new_file)
     else:
         print('too long')
 
@@ -37,4 +35,4 @@ def get_video_duration(url):
 
 
 if __name__ == "__main__":
-    executor.start_polling(dp)
+    executor.start_polling(dp,skip_updates=True)
