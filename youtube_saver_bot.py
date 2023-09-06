@@ -3,6 +3,7 @@ from config import TOKEN_API
 from pytube import YouTube
 import pytube
 import os
+import time
 
 bot = Bot(TOKEN_API)
 dp = Dispatcher(bot)
@@ -10,8 +11,15 @@ dp = Dispatcher(bot)
 
 @dp.message_handler()
 async def get_url(message: types.Message):
-    file = open(get_audio(message.text), 'rb')
-    await bot.send_video(message.chat.id, file)
+    try:
+        file_location = get_audio(message.text)
+        file = open(file_location, 'rb')
+        await bot.send_video(message.chat.id, file)
+        time.sleep(3)
+        os.remove(file_location)
+    except Exception:
+        print('ссылка не годится, или это не ссылка')
+        await bot.send_message(message.from_user.id, text='видео слишком длинное, либо ссылка не годится')
 
 
 def get_audio(url):
@@ -23,7 +31,7 @@ def get_audio(url):
         new_file = base + '.mp3'
         os.rename(out_file, new_file)
         print('success')
-        return(new_file)
+        return new_file
     else:
         print('too long')
 
@@ -35,4 +43,4 @@ def get_video_duration(url):
 
 
 if __name__ == "__main__":
-    executor.start_polling(dp,skip_updates=True)
+    executor.start_polling(dp, skip_updates=True)
