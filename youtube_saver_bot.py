@@ -12,11 +12,13 @@ dp = Dispatcher(bot)
 async def get_url(message: types.Message):
     await bot.send_sticker(chat_id=message.chat.id,
                            sticker='CAACAgQAAxkBAAEKJWVk7ExZWiHvnJkiCkR96QGIM0e1KwACQwgAArdkcVPkfM0BRtGhHzAE')
+    # file = open('One Rode to Asa Bay.mp3', 'rb')
+    # await bot.send_video(message.chat.id, file)
     get_audio(message.text)
 
 
 def get_audio(url):
-    if get_video_duration(url) < 600:
+    if get_video_duration(url) < 601:
         yt = YouTube(url)
         video = yt.streams.filter(only_audio=True).first()
         out_file = video.download(output_path=".")
